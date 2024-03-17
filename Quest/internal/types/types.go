@@ -16,12 +16,6 @@ type Quest struct {
 	Cost int    `json:"cost"`
 }
 
-type QuestFromDb struct {
-	QuestId int    `db:"quest_id"`
-	Name    string `db:"name"`
-	Cost    int    `db:"cost"`
-}
-
 type Response struct {
 	Message     string `json:"message"`
 	Description any    `json:"description"`

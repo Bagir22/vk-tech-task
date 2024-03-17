@@ -24,7 +24,7 @@ func (h *Handler) Init() *gin.Engine {
 	router.POST("/user", h.AddUser)
 	router.GET("/user/:id/history", h.GetUserHistory)
 	router.POST("/quest", h.AddQuest)
-	router.POST("/signal", h.AddSignal)
+	router.POST("/signal", h.ProcessSignal)
 
 	return router
 }
@@ -63,7 +63,7 @@ func (h *Handler) AddQuest(c *gin.Context) {
 	c.JSON(http.StatusOK, types.Response{"Quest saved", quest})
 }
 
-func (h *Handler) AddSignal(c *gin.Context) {
+func (h *Handler) ProcessSignal(c *gin.Context) {
 	var signal types.Signal
 	err := c.BindJSON(&signal)
 	if err != nil {
