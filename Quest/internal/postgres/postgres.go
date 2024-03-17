@@ -1,7 +1,9 @@
 package postgres
 
 import (
+	"Quest/Database/Queries"
 	"Quest/internal/config"
+	"Quest/internal/types"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -34,4 +36,12 @@ func InitConn() (*sqlx.DB, error) {
 	}
 
 	return db, nil
+}
+
+func (d *Db) AddUser(user types.User) error {
+	_, err := d.db.Exec(Queries.InsertUserQuery, user.Name, user.Balance)
+	if err != nil {
+		return err
+	}
+	return nil
 }
