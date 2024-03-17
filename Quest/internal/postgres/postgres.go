@@ -45,3 +45,11 @@ func (d *Db) AddUser(user types.User) error {
 	}
 	return nil
 }
+
+func (d *Db) AddQuest(quest types.Quest) error {
+	_, err := d.db.Exec(Queries.InsertQuestQuery, quest.Name, quest.Cost)
+	if err != nil {
+		return err
+	}
+	return nil
+}

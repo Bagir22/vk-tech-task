@@ -8,3 +8,10 @@ func ValidateUser(user types.User) bool {
 	}
 	return true
 }
+
+func ValidateQuest(quest types.Quest) bool {
+	if quest.Name == "" || quest.Cost == 0 {
+		return false
+	}
+	return true
+}

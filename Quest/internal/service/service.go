@@ -8,6 +8,7 @@ import (
 
 type Repository interface {
 	AddUser(User types.User) error
+	AddQuest(quest types.Quest) error
 }
 
 type Service struct {
@@ -26,4 +27,12 @@ func (s *Service) AddUser(user types.User) error {
 		return errors.New("Can't validate user")
 	}
 	return s.repo.AddUser(user)
+}
+
+func (s *Service) AddQuest(quest types.Quest) error {
+	validate := utils.ValidateQuest(quest)
+	if !validate {
+		return errors.New("Can't validate quest")
+	}
+	return s.repo.AddQuest(quest)
 }
