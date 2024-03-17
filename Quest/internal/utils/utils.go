@@ -15,3 +15,10 @@ func ValidateQuest(quest types.Quest) bool {
 	}
 	return true
 }
+
+func ValidateSignal(signal types.Signal) bool {
+	if signal.UserId == 0 || signal.QuestId == 0 {
+		return false
+	}
+	return true
+}

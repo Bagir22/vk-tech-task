@@ -26,3 +26,8 @@ type Response struct {
 	Message     string `json:"message"`
 	Description any    `json:"description"`
 }
+
+type Signal struct {
+	UserId  int `json:"user_id"`
+	QuestId int `json:"quest_id"`
+}

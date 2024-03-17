@@ -3,6 +3,7 @@ package handler
 import (
 	"Quest/internal/service"
 	"Quest/internal/types"
+	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -22,7 +23,7 @@ func (h *Handler) Init() *gin.Engine {
 	router.POST("/user", h.AddUser)
 	//router.GET("/signal/:id/history", h.GetUserHistory)
 	router.POST("/quest", h.AddQuest)
-	//router.POST("/signal", h.AddSignal)
+	router.POST("/signal", h.AddSignal)
 
 	return router
 }
@@ -35,7 +36,7 @@ func (h *Handler) AddUser(c *gin.Context) {
 		return
 	}
 
-	err = h.service.AddUser(user)
+	err = h.service.AddUser(context.TODO(), user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, types.Response{"Can't save user", err.Error()})
 		return
@@ -52,11 +53,28 @@ func (h *Handler) AddQuest(c *gin.Context) {
 		return
 	}
 
-	err = h.service.AddQuest(quest)
+	err = h.service.AddQuest(context.TODO(), quest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, types.Response{"Can't save quest", err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, types.Response{"Quest saved", quest})
+}
+
+func (h *Handler) AddSignal(c *gin.Context) {
+	var signal types.Signal
+	err := c.BindJSON(&signal)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, types.Response{"Can't parse signal", err.Error()})
+		return
+	}
+
+	user, err := h.service.ProcessSignal(context.TODO(), signal)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, types.Response{"Can't process signal", err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, types.Response{"Signal processed", user})
 }
