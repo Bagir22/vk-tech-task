@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type Handler struct {
@@ -21,7 +22,7 @@ func InitHandler(service service.Repository) *Handler {
 func (h *Handler) Init() *gin.Engine {
 	router := gin.Default()
 	router.POST("/user", h.AddUser)
-	//router.GET("/signal/:id/history", h.GetUserHistory)
+	router.GET("/user/:id/history", h.GetUserHistory)
 	router.POST("/quest", h.AddQuest)
 	router.POST("/signal", h.AddSignal)
 
@@ -77,4 +78,19 @@ func (h *Handler) AddSignal(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, types.Response{"Signal processed", user})
+}
+
+func (h *Handler) GetUserHistory(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, types.Response{"Can't parse user id", err.Error()})
+		return
+	}
+	userHistory, err := h.service.GetUserHistory(context.TODO(), id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, types.Response{"Can't get user History", err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, types.Response{"Get User history", userHistory})
 }

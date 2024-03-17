@@ -11,6 +11,7 @@ type Repository interface {
 	AddUser(ctx context.Context, User types.User) error
 	AddQuest(ctx context.Context, quest types.Quest) error
 	ProcessSignal(ctx context.Context, signal types.Signal) (types.User, error)
+	GetUserHistory(ctx context.Context, id int) ([]types.UserHistory, error)
 }
 
 type Service struct {
@@ -45,4 +46,8 @@ func (s *Service) ProcessSignal(ctx context.Context, signal types.Signal) (types
 		return types.User{}, errors.New("Can't validate signal")
 	}
 	return s.repo.ProcessSignal(ctx, signal)
+}
+
+func (s *Service) GetUserHistory(ctx context.Context, id int) ([]types.UserHistory, error) {
+	return s.repo.GetUserHistory(ctx, id)
 }

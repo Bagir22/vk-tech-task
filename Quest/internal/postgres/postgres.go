@@ -6,6 +6,7 @@ import (
 	"Quest/internal/types"
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -78,7 +79,7 @@ func (d *Db) ProcessSignal(ctx context.Context, signal types.Signal) (types.User
 	}
 	//Get user
 	var user types.UserFromDb
-	if err = tx.QueryRowContext(ctx, Queries.GetUserBalanceQuery, signal.UserId).Scan(&user.UserId,
+	if err = tx.QueryRowContext(ctx, Queries.GetUserQuery, signal.UserId).Scan(&user.UserId,
 		&user.Name, &user.Balance); err != nil {
 		if err == sql.ErrNoRows {
 			return types.User{}, fail(fmt.Errorf("User is not exist"))
@@ -104,4 +105,33 @@ func (d *Db) ProcessSignal(ctx context.Context, signal types.Signal) (types.User
 	}
 
 	return types.User{user.Name, user.Balance + cost}, nil
+}
+
+func (d *Db) GetUserHistory(ctx context.Context, id int) ([]types.UserHistory, error) {
+	var count int
+	err := d.db.QueryRow(Queries.CheckUserExistQuery, id).Scan(&count)
+	if err != nil {
+		return []types.UserHistory{}, err
+	}
+	if count == 0 {
+		return []types.UserHistory{}, errors.New("User is not exist")
+	}
+
+	var history []types.UserHistory
+	rows, err := d.db.Query(Queries.GetUserHistoryQuery, id)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var completedTask types.UserHistory
+		err := rows.Scan(&completedTask.UserId, &completedTask.UserName,
+			&completedTask.QuestId, &completedTask.QuestName, &completedTask.Cost)
+		if err != nil {
+			return nil, err
+		} else {
+			history = append(history, completedTask)
+		}
+	}
+
+	return history, nil
 }
