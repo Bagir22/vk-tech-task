@@ -12,6 +12,9 @@ import (
 	"syscall"
 )
 
+// @title Quest API
+// @version 1.0
+// @description This is a sample Quest API.
 func main() {
 	err := godotenv.Load()
 

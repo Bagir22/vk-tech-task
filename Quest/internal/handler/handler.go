@@ -1,10 +1,13 @@
 package handler
 
 import (
+	_ "Quest/Docs"
 	"Quest/internal/service"
 	"Quest/internal/types"
 	"context"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"strconv"
 )
@@ -28,6 +31,7 @@ func (h *Handler) Init() *gin.Engine {
 	router.GET("/quest", h.GetQuests)
 	router.PUT("/quest/:id", h.UpdateQuest)
 	router.POST("/signal", h.ProcessSignal)
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	return router
 }
@@ -139,7 +143,7 @@ func (h *Handler) UpdateQuest(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, types.Response{"Quest update", quest})
+	c.JSON(http.StatusOK, types.Response{"Quest updated", quest})
 	return
 }
 

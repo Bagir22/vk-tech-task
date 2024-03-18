@@ -1,0 +1,510 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Quests",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080/",
+            "description": "Dev server"
+        }
+    ],
+    "paths": {
+        "/user": {
+            "get": {
+                "summary": "Метод получения списка пользователей",
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ, список пользователей",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string",
+                                                "example": "Get users list"
+                                            },
+                                            {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/components/schemas/UserResponse"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Ошибка",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Метод создания пользователя",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ, данные добавленного пользователя",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string",
+                                                "example": "User saved"
+                                            },
+                                            {
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Ошибка",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{user_id}/history": {
+            "get": {
+                "summary": "Метод получения истории выполненных заданий пользователя",
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Идентификатор пользователя",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ, история пользователя",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string",
+                                                "example": "Get user history"
+                                            },
+                                            {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/components/schemas/UserHistory"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Ошибка",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/quest": {
+            "get": {
+                "summary": "Метод получения списка заданий",
+                "tags": [
+                    "Quest"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ, список заданий",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string",
+                                                "example": "Get quests list"
+                                            },
+                                            {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/components/schemas/QuestResponse"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Ошибка",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Метод создания задания",
+                "tags": [
+                    "Quest"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Quest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ, данные добавленного задания",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string",
+                                                "example": "Quest saved"
+                                            },
+                                            {
+                                                "$ref": "#/components/schemas/Quest"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Ошибка",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/quest/{quest_id}": {
+            "put": {
+                "summary": "Метод обновления данных задания",
+                "tags": [
+                    "Quest"
+                ],
+                "parameters": [
+                    {
+                        "description": "Идентификатор задания",
+                        "explode": false,
+                        "in": "path",
+                        "name": "quest_id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Quest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string",
+                                                "example": "Quest updated"
+                                            },
+                                            {
+                                                "$ref": "#/components/schemas/Quest"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Успешный ответ, измененные данные задания"
+                    },
+                    "default": {
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Ошибка"
+                    }
+                }
+            }
+        },
+        "/signal": {
+            "post": {
+                "summary": "Метод сигнала сервису",
+                "description": "Выполняется транзакция, добавляющяя выполненное задание пользователю и пополняющая его баланс",
+                "tags": [
+                    "Signal"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Signal"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ, выполнение заданания обработалось",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string",
+                                                "example": "Signal processed"
+                                            },
+                                            {
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Ошибка",
+                        "content": {
+                            "applicataion/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "balance"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Danila"
+                    },
+                    "balance": {
+                        "type": "integer",
+                        "example": 4000
+                    }
+                }
+            },
+            "Quest": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "cost"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Do something"
+                    },
+                    "cost": {
+                        "type": "integer",
+                        "example": 1000
+                    }
+                }
+            },
+            "Signal": {
+                "type": "object",
+                "required": [
+                    "user_id",
+                    "quest_id"
+                ],
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 20
+                    },
+                    "quest_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                }
+            },
+            "UserHistory": {
+                "type": "object",
+                "required": [
+                    "user_id",
+                    "user_name",
+                    "quest_id",
+                    "quest_name",
+                    "cost"
+                ],
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 20
+                    },
+                    "user_name": {
+                        "type": "string",
+                        "example": "Danila"
+                    },
+                    "quest_id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "quest_name": {
+                        "type": "string",
+                        "example": "Do something"
+                    },
+                    "cost_id": {
+                        "type": "integer",
+                        "example": 500
+                    }
+                }
+            },
+            "UserResponse": {
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Danila"
+                    },
+                    "balance": {
+                        "type": "integer",
+                        "example": 1000
+                    }
+                }
+            },
+            "QuestResponse": {
+                "type": "object",
+                "properties": {
+                    "quest_id": {
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Do something"
+                    },
+                    "balance": {
+                        "type": "integer",
+                        "example": 400
+                    }
+                }
+            },
+            "Response": {
+                "type": "object",
+                "required": [
+                    "message",
+                    "description"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Some message about response"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Some error"
+                    }
+                }
+            }
+        }
+    }
+}
