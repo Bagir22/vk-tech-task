@@ -106,6 +106,11 @@ func TestProcessSignalHandler(t *testing.T) {
 	json.Unmarshal(w.Body.Bytes(), &response)
 
 	assert.Equal(t, "Signal processed", response.Message)
+	responseData, _ := response.Description.(map[string]interface{})
+	name, _ := responseData["name"]
+	balance, _ := responseData["balance"].(float64)
+	assert.Equal(t, "Danila", name)
+	assert.Equal(t, 1000, int(balance))
 }
 
 func TestProcessSignalHandlerWithoutBody(t *testing.T) {
@@ -116,14 +121,6 @@ func TestProcessSignalHandlerWithoutBody(t *testing.T) {
 	json.Unmarshal(w.Body.Bytes(), &response)
 
 	assert.Equal(t, "Can't parse signal", response.Message)
-}
-
-type UserHistory struct {
-	UserId    int    `db:"user_id" json:"user_id"`
-	UserName  string `db:"username" json:"user_name"`
-	QuestId   int    `db:"quest_id" json:"quest_id"`
-	QuestName string `db:"quest_name" json:"quest_name"`
-	Cost      int    `db:"cost" json:"cost"`
 }
 
 func performGetUserHistoryRequest(t *testing.T, userID string) *httptest.ResponseRecorder {
@@ -163,6 +160,26 @@ func TestGetUserHistoryHandlerInvalidID(t *testing.T) {
 
 type mockService struct{}
 
+func (s *mockService) GetUserHistory(ctx context.Context, id int) ([]types.UserHistory, error) {
+	return []types.UserHistory{}, nil
+}
+
+func (s *mockService) GetUsers(ctx context.Context) ([]types.UserFromDb, error) {
+	return []types.UserFromDb{}, nil
+}
+
+func (s *mockService) GetQuestById(ctx context.Context, id int) (types.QuestFromDb, error) {
+	return types.QuestFromDb{}, nil
+}
+
+func (s *mockService) UpdateQuest(ctx context.Context, quest types.Quest, id int) error {
+	return nil
+}
+
+func (s *mockService) GetQuests(ctx context.Context) ([]types.QuestFromDb, error) {
+	return []types.QuestFromDb{}, nil
+}
+
 func (s *mockService) AddUser(ctx context.Context, user types.User) error {
 	return nil
 }
@@ -172,9 +189,5 @@ func (s *mockService) AddQuest(ctx context.Context, quest types.Quest) error {
 }
 
 func (s *mockService) ProcessSignal(ctx context.Context, signal types.Signal) (types.User, error) {
-	return types.User{}, nil
-}
-
-func (s *mockService) GetUserHistory(ctx context.Context, id int) ([]types.UserHistory, error) {
-	return nil, nil
+	return types.User{"Danila", 1000}, nil
 }

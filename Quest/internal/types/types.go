@@ -1,21 +1,24 @@
 package types
 
 type User struct {
-	Name    string `json:"name"`
-	Balance int    `json:"balance"`
+	Name    string `json:"name" db:"name"`
+	Balance int    `json:"balance" db:"balance"`
 }
 
 type UserFromDb struct {
-	UserId  int    `db:"user_id"`
-	Name    string `db:"name"`
-	Balance int    `db:"balance"`
+	UserId int `db:"user_id"`
+	User
 }
 
 type Quest struct {
-	Name string `json:"name"`
-	Cost int    `json:"cost"`
+	Name string `json:"name" db:"name"`
+	Cost int    `json:"cost" json:"cost"`
 }
 
+type QuestFromDb struct {
+	QuestId int `db:"quest_id"`
+	Quest
+}
 type Response struct {
 	Message     string `json:"message"`
 	Description any    `json:"description"`

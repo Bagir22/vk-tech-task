@@ -6,9 +6,12 @@ const InsertUserHistoryQuery = `insert into "UserHistory" (user_id, quest_id) va
 
 const GetQuestCostQuery = `select cost from "Quest" where quest_id = $1`
 const GetUserQuery = `select * from "User" where user_id = $1;`
+const GetUsersQuery = `select * from "User"`
+const GetQuestQuery = `select * from "Quest" where quest_id = $1;`
+const GetQuestsQuery = `select * from "Quest"`
 
 const UpdateUserBalanceQuery = `update "User" set balance = $1 where user_id = $2;`
-
+const UpdateQuestQuery = `update "Quest" set name = $1, cost = $2 where quest_id = $3;`
 const GetUserHistoryQuery = `select "User".user_id as "user_id", "User".name as "username", "Quest"."quest_id" as "quest_id",
         							"Quest"."name" as "quest_name", "Quest".cost from "UserHistory" 
         					    join "User" on "UserHistory".user_id = "User".user_id

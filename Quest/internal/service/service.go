@@ -12,6 +12,10 @@ type Repository interface {
 	AddQuest(ctx context.Context, quest types.Quest) error
 	ProcessSignal(ctx context.Context, signal types.Signal) (types.User, error)
 	GetUserHistory(ctx context.Context, id int) ([]types.UserHistory, error)
+	GetUsers(ctx context.Context) ([]types.UserFromDb, error)
+	GetQuestById(ctx context.Context, id int) (types.QuestFromDb, error)
+	UpdateQuest(ctx context.Context, quest types.Quest, id int) error
+	GetQuests(ctx context.Context) ([]types.QuestFromDb, error)
 }
 
 type Service struct {
@@ -50,4 +54,24 @@ func (s *Service) ProcessSignal(ctx context.Context, signal types.Signal) (types
 
 func (s *Service) GetUserHistory(ctx context.Context, id int) ([]types.UserHistory, error) {
 	return s.repo.GetUserHistory(ctx, id)
+}
+
+func (s *Service) GetUsers(ctx context.Context) ([]types.UserFromDb, error) {
+	return s.repo.GetUsers(ctx)
+}
+
+func (s *Service) GetQuestById(ctx context.Context, id int) (types.QuestFromDb, error) {
+	return s.repo.GetQuestById(ctx, id)
+}
+
+func (s *Service) UpdateQuest(ctx context.Context, quest types.Quest, id int) error {
+	validate := utils.ValidateQuest(quest)
+	if !validate {
+		return errors.New("Can't validate quest")
+	}
+	return s.repo.UpdateQuest(ctx, quest, id)
+}
+
+func (s *Service) GetQuests(ctx context.Context) ([]types.QuestFromDb, error) {
+	return s.repo.GetQuests(ctx)
 }

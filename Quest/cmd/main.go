@@ -12,10 +12,6 @@ import (
 	"syscall"
 )
 
-// @title Your Gin Application
-// @version 1.0
-// @description This is a sample server for your Gin Application.
-// @BasePath /
 func main() {
 	err := godotenv.Load()
 

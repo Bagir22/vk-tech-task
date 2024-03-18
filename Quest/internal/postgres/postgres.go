@@ -69,7 +69,7 @@ func (d *Db) ProcessSignal(ctx context.Context, signal types.Signal) (types.User
 
 	defer tx.Rollback()
 
-	//Get the price for the quest
+	//Get price for the quest
 	cost := 0
 	if err = tx.QueryRowContext(ctx, Queries.GetQuestCostQuery, signal.QuestId).Scan(&cost); err != nil {
 		if err == sql.ErrNoRows {
@@ -134,4 +134,66 @@ func (d *Db) GetUserHistory(ctx context.Context, id int) ([]types.UserHistory, e
 	}
 
 	return history, nil
+}
+
+func (d *Db) GetUsers(ctx context.Context) ([]types.UserFromDb, error) {
+	var users []types.UserFromDb
+
+	rows, err := d.db.Query(Queries.GetUsersQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var user types.UserFromDb
+		err := rows.Scan(&user.UserId, &user.Name, &user.Balance)
+		if err != nil {
+			return nil, err
+		} else {
+			users = append(users, user)
+		}
+	}
+
+	return users, nil
+}
+
+func (d *Db) GetQuestById(ctx context.Context, id int) (types.QuestFromDb, error) {
+	var quest types.QuestFromDb
+
+	err := d.db.Get(&quest, Queries.GetQuestQuery, id)
+	if err != nil {
+		return types.QuestFromDb{}, err
+	}
+
+	return quest, nil
+}
+
+func (d *Db) UpdateQuest(ctx context.Context, quest types.Quest, id int) error {
+	_, err := d.db.Exec(Queries.UpdateQuestQuery, quest.Name, quest.Cost, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *Db) GetQuests(ctx context.Context) ([]types.QuestFromDb, error) {
+	var quests []types.QuestFromDb
+
+	rows, err := d.db.Query(Queries.GetQuestsQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var quest types.QuestFromDb
+		err := rows.Scan(&quest.QuestId, &quest.Name, &quest.Cost)
+		if err != nil {
+			return nil, err
+		} else {
+			quests = append(quests, quest)
+		}
+	}
+
+	return quests, nil
 }
